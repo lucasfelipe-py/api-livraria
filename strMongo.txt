@@ -1,0 +1,1 @@
+mongodb+srv://lucasrogerio:<;LucasDGT1002>@cluster0.oaxmq5w.mongodb.net/?retryWrites=true&w=majority
