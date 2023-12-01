@@ -1,8 +1,8 @@
 import mongoose from "mongoose";
 
 async function connDB() {
-    mongoose.connect(process.env.DB_CONNECTION_STRING)
-    return mongoose.connection
+  mongoose.connect(process.env.DB_CONNECTION_STRING);
+  return mongoose.connection;
 }
 
-export default connDB
+export default connDB;
