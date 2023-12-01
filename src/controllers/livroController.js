@@ -59,6 +59,16 @@ class LivroController {
             res.status(500).json({ message: `${err.message} - Falha ao deletar` })
         }
     }
+
+    static async listBooksByPublisher(req, res) {
+        const publisher = req.query.editora
+        try {
+            const booksByPublisher = await bookModel.find({ editora: publisher })
+            res.status(200).json(booksByPublisher)
+        } catch (err) {
+            res.status(500).json({ message: `${err.message} - Falha na requisição` })
+        }
+    }
 }
 
 export default LivroController
