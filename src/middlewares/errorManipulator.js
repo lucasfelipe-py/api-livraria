@@ -6,8 +6,6 @@ import NotFound from "../errors/NotFound.js";
 
 // eslint-disable-next-line no-unused-vars
 function errorManipulator(err, req, res, next) {
-  console.log(err);
-
   if(err instanceof mongoose.Error.CastError) {
     new IncorrectReq().sendResponse(res);
   } else if (err instanceof mongoose.Error.ValidationError) {

@@ -1,12 +1,42 @@
 import mongoose from "mongoose";
 
 const bookSchema = new mongoose.Schema({
-  id: { type: mongoose.Schema.Types.ObjectId },
-  titulo: { type: String, required: [true, "Titulo is required"] },
-  editora: { type: String },
-  preco: { type: Number },
-  paginas: { type: Number },
-  autor: { type: mongoose.Schema.Types.ObjectId, ref: "autores", required: [true, "Autor is required"] }
+  id: { type: String },
+  titulo: { 
+    type: String, 
+    required: [true, "Titulo is required"],
+    validate: {
+      validator: value => /^.{3,40}$/.test(value),
+      message: "Titulo must have between 3 and 40 characters"
+    }
+  },
+  editora: {
+    type: String,
+    required: [true, "Editora is required"],
+    validate: {
+      validator: value => /^.{3,40}$/.test(value),
+      message: "Editora must have between 3 and 40 characters"
+    }
+  },
+  preco: {
+    type: Number,
+    min: [1, "Preço min: 1"],
+    max: [5000, "Preço max: 5000"]
+  },
+  paginas: {
+    type: Number, 
+    min: [1, "Paginas min: 10"], 
+    max: [5000, "Paginas max: 5000"]
+  },
+  autor: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "autores",
+    required: [true, "Autor is required"],
+    validate: {
+      validator: value => /^.{3,40}$/.test(value),
+      message: "Autor must have between 3 and 40 characters"
+    }
+  }
 }, { versionKey: false });
 
 const bookModel = mongoose.model("livros", bookSchema);
