@@ -3,26 +3,26 @@ import { autor } from "../models/Autor.js";
 
 class LivroController {
 
-  static async booksList(req, res) {
+  static async booksList(req, res, next) {
     try{
       const booksList = await bookModel.find({});
       res.status(200).json(booksList);
     } catch (err) {
-      res.status(500).json({ message: `${err.message} - Falha na requisição` });
+      next(err);
     }
   }
 
-  static async findBookById(req, res) {
+  static async findBookById(req, res, next) {
     try {
       const id = req.params.id;
       const bookFound = await bookModel.findById(id);
       res.status(200).json(bookFound);
     } catch (err) {
-      res.status(500).json({ message: `${err.message} - Falha na requisição do livro` });
+      next(err);
     }
   }
 
-  static async registerBook(req, res) {
+  static async registerBook(req, res, next) {
     const newBook = req.body;
     try {
       const foundAuthor = await autor.findById(newBook.autor);
@@ -36,37 +36,37 @@ class LivroController {
         livro: createdBook
       });
     } catch (err) {
-      res.status(500).json({ message: `${err.message} - Falha ao cadastrar livro` });
+      next(err);
     }
   }
 
-  static async updateBookById(req, res) {
+  static async updateBookById(req, res, next) {
     try {
       const id = req.params.id;
       await bookModel.findByIdAndUpdate(id, req.body);
       res.status(200).json({ message: "Livro atualizado" });
     } catch (err) {
-      res.status(500).json({ message: `${err.message} - Falha na requisição do livro` });
+      next(err);
     }
   }
 
-  static async deleteBookById(req, res) {
+  static async deleteBookById(req, res, next) {
     try {
       const id = req.params.id;
       await bookModel.findByIdAndDelete(id);
       res.status(200).json({ message: "Livro deletado" });
     } catch (err) {
-      res.status(500).json({ message: `${err.message} - Falha ao deletar` });
+      next(err);
     }
   }
 
-  static async listBooksByPublisher(req, res) {
+  static async listBooksByPublisher(req, res, next) {
     const publisher = req.query.editora;
     try {
       const booksByPublisher = await bookModel.find({ editora: publisher });
       res.status(200).json(booksByPublisher);
     } catch (err) {
-      res.status(500).json({ message: `${err.message} - Falha na requisição` });
+      next(err);
     }
   }
 }

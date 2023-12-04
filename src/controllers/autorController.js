@@ -1,18 +1,17 @@
-import mongoose from "mongoose";
 import { autor } from "../models/Autor.js";
 
 class AutorController {
 
-  static async authorsList(req, res) {
+  static async authorsList(req, res, next) {
     try{
       const authorsList = await autor.find({});
       res.status(200).json(authorsList);
     } catch (err) {
-      res.status(500).json({ message: `${err.message} - Falha na requisição` });
+      next(err);
     }
   }
 
-  static async findAuthorById(req, res) {
+  static async findAuthorById(req, res, next) {
     try {
       const id = req.params.id;
       const authorFound = await autor.findById(id);
@@ -24,43 +23,39 @@ class AutorController {
         res.status(404).json({ message: "Autor não encontrado" }); 
       }
     } catch (err) {
-      if (err instanceof mongoose.Error.CastError) {
-        res.status(400).json({ message: "Parâmetro em formato incorreto" });
-      } else {
-        res.status(400).json({ message: "Erro interno do servidor" });
-      }
+      next(err);
     }
   }
 
-  static async registerAuthor(req, res) {
+  static async registerAuthor(req, res, next) {
     try {
       const newAuthor = await autor.create(req.body);
       res.status(201).json({
-        message: "Livro criado com sucesso",
-        livro: newAuthor
+        message: "Autor criado com sucesso",
+        autor: newAuthor
       });
     } catch (err) {
-      res.status(500).json({ message: `${err.message} - Falha ao cadastrar livro` });
+      next(err);
     }
   }
 
-  static async updateAuthorById(req, res) {
+  static async updateAuthorById(req, res, next) {
     try {
       const id = req.params.id;
       await autor.findByIdAndUpdate(id, req.body);
-      res.status(200).json({ message: "Livro atualizado" });
+      res.status(200).json({ message: "Autor atualizado" });
     } catch (err) {
-      res.status(500).json({ message: `${err.message} - Falha na requisição do livro` });
+      next(err);
     }
   }
 
-  static async deleteAuthorById(req, res) {
+  static async deleteAuthorById(req, res, next) {
     try {
       const id = req.params.id;
       await autor.findByIdAndDelete(id);
-      res.status(200).json({ message: "Livro deletado" });
+      res.status(200).json({ message: "Autor deletado" });
     } catch (err) {
-      res.status(500).json({ message: `${err.message} - Falha ao deletar` });
+      next(err);
     }
   }
 }
