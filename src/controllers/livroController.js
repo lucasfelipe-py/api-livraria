@@ -97,9 +97,7 @@ class LivroController {
         }
       }
 
-      const booksByFilter = await bookModel
-        .find(search)
-        .populate("autor");
+      const booksByFilter = bookModel.find(search);
       req.result = booksByFilter;
       next();
     } catch (err) {
