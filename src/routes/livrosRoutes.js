@@ -6,7 +6,7 @@ const router = express.Router();
 
 router
   .get("/livros", LivroController.booksList, paginate)
-  .get("/livros/busca", LivroController.listBooksByFilter)
+  .get("/livros/busca", LivroController.listBooksByFilter, paginate)
   .get("/livros/:id", LivroController.findBookById)
   .post("/livros", LivroController.registerBook)
   .put("/livros/:id", LivroController.updateBookById)
