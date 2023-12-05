@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import autopopulate from "mongoose-autopopulate";
 
 const bookSchema = new mongoose.Schema({
   id: { type: String },
@@ -35,10 +36,12 @@ const bookSchema = new mongoose.Schema({
     validate: {
       validator: value => /^.{3,40}$/.test(value),
       message: "Autor must have between 3 and 40 characters"
-    }
+    },
+    autopopulate: { select: "nome" }
   }
 }, { versionKey: false });
 
+bookSchema.plugin(autopopulate);
 const bookModel = mongoose.model("livros", bookSchema);
 
 export default bookModel;

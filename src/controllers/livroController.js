@@ -3,11 +3,11 @@ import autores from "../models/Autor.js";
 import NotFound from "../errors/NotFound.js";
 
 class LivroController {
-
   static async booksList(req, res, next) {
     try{
-      const booksList = await bookModel.find({});
-      res.status(200).json(booksList);
+      const booksList = bookModel.find();
+      req.result = booksList;
+      next();
     } catch (err) {
       next(err);
     }
@@ -78,7 +78,7 @@ class LivroController {
 
   static async listBooksByFilter(req, res, next) {
     try {
-      const { editora, titulo, maxPaginas, minPaginas } = req.query;
+      const { editora, titulo, maxPaginas, minPaginas, autor } = req.query;
 
       const search = {};
 
@@ -87,13 +87,21 @@ class LivroController {
       if (maxPaginas) search.paginas = { $lte: maxPaginas };
       if (minPaginas) search.paginas = { $gte: minPaginas };
 
-      const booksByFilter = await bookModel.find(search);
-
-      if(booksByFilter.length > 0) {
-        res.status(200).json(booksByFilter);
-      } else {
-        next(new NotFound("Nenhum resultado encontrado"));
+      if (autor) {
+        const author = await autores.findOne({ nome: autor });
+        
+        if (author !== null) {
+          search.autor = author._id;
+        } else {
+          res.status(200).json([]);
+        }
       }
+
+      const booksByFilter = await bookModel
+        .find(search)
+        .populate("autor");
+      req.result = booksByFilter;
+      next();
     } catch (err) {
       next(err);
     }
